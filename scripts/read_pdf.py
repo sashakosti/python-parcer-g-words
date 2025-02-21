@@ -8,7 +8,7 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 if __name__ == "__main__":
-    pdf_path = "/Users/DonHuan/Programming learning/python_parcer/shit2parse/Tablitsa_nepravilnyh_glagolov_nemetskogo_jazyka.pdf"  # Замени на свой путь
+    pdf_path = "../data/shit2parse/Tablitsa_nepravilnyh_glagolov_nemetskogo_jazyka.pdf"
     extracted_text = extract_text_from_pdf(pdf_path)
     print(extracted_text)
 
