@@ -12,12 +12,7 @@ def extract_text_from_pdf(pdf_path): # Чтение текста из ПДФ
     return text
 
 def parse_words_from_text(text, fields=None):
-    """
-    Разбирает текст и возвращает список слов.
-    :param text: Входной текст с неправильными глаголами
-    :param fields: Какие поля нужны? ["infinitive", "past", "participle", "translation", "level"]
-    :return: Список кортежей с выбранными полями
-    """
+
     lines = text.split("\n")  # Разделяем текст на строки
     words = []
 

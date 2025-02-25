@@ -1,7 +1,7 @@
 import sqlite3
 
 def add_word(word, translation, example, level, tags):
-    conn = sqlite3.connect("anki_words.db")
+    conn = sqlite3.connect("data/my_database.db")
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -16,6 +16,5 @@ def add_word(word, translation, example, level, tags):
 
     conn.commit()
     conn.close()
-
-# Пример добавления слова
-add_word("laufen", "бегать", "Er läuft jeden Morgen.", "A1", "глагол,движение")
+    print(f"✅ Слово {word} успешно добавлено в базу данных!")
+    

@@ -1,7 +1,7 @@
 import sqlite3
 import csv
 
-DB_PATH = "data/anki_words.db"
+DB_PATH = "data/my_database.db"
 
 def export_to_anki(filename="data/export.csv"):
     conn = sqlite3.connect(DB_PATH)
