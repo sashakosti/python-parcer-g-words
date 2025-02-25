@@ -1,7 +1,8 @@
 import fitz  # pymupdf
 import os
+from config import CONFIG
 
-pdf_path = "/Users/DonHuan/Programming learning/python_parcer/data/shit2parse/Tablitsa_nepravilnyh_glagolov_nemetskogo_jazyka.pdf"  # Define your pdf path here
+pdf_path = CONFIG.get("pdf")  # Define your pdf path here
 
 if not os.path.exists(pdf_path):
     raise FileNotFoundError(f"Файл {pdf_path} не найден. Проверь путь.")
@@ -18,23 +19,24 @@ def parse_words_from_text(text, fields=None):
 
     field_indexes = {
         "infinitive": 0,
-        "past": 1,
-        "participle": 2,
-        "translation": 3,
-        "level": 4
+        "er/sie/es": 1,
+        "prataritum": 2,
+        "participle_II": 3,
+        "translation": 4,
+        "level": 5
     }
 
     # Если поля не заданы, берём всё
     if fields is None:
-        fields = ["infinitive", "past", "participle", "translation", "level"]
+        fields = ["infinitive", "er/sie/es", "prataritum", "participle_II", "translation", "level"]
 
     selected_indexes = [field_indexes[field] for field in fields]
 
     for line in lines:
-        parts = line.split(" - ")  # Разделяем по " - "
-        if len(parts) < 5:
-            continue  # Пропускаем, если данных не хватает
-
+        parts = line.split("\t")  # Разделяем по " - "
+        if len(parts) < len(field_indexes):
+            print(f"Ошибка: в строке {line} не хватает данных! Разбилось на {len(parts)} частей.")
+            continue
         selected_parts = [parts[i] for i in selected_indexes]
         words.append(tuple(selected_parts))
 

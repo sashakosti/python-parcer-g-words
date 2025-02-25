@@ -1,0 +1,7 @@
+{
+    "database": "data/words.db",
+    "export_csv": "data/export.csv",
+    "export_json": "data/export.json",
+    "log": "data/log.txt",
+    "pdf": "data/pdfs/verbs_table.pdf"
+}

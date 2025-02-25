@@ -1,12 +1,15 @@
 from scripts.parser import extract_text_from_pdf, parse_words_from_text
-from scripts.database import init_db, add_word
+from scripts.database import init_db
 from scripts.export import export_to_anki
+from scripts.check_words import add_word
+from scripts.logger import log_info, log_warning, log_error
+from scripts.config import CONFIG 
 
 def main():
     init_db()  # Инициализация базы
     
     # Парсим PDF и добавляем слова в базу
-    pdf_text = extract_text_from_pdf("data/input.pdf")
+    pdf_text = extract_text_from_pdf(CONFIG.get("pdf", "data/verbs_table.pdf"))
     words = parse_words_from_text(pdf_text)  # ❗Здесь нужна твоя функция парсинга
     for word in words:
         add_word(*word)
