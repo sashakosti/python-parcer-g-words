@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_PATH = "data/my_database.db"
+DB_PATH = "my_database.db"
 
 def init_db():
     """Создаёт таблицу, если её ещё нет"""
@@ -19,20 +19,15 @@ def init_db():
     conn.commit()
     conn.close()
 
-def add_word(word, translation, example, level, tags):
-    """Добавляет слово в базу"""
+def check_tables():
+    """Проверяет наличие таблицы words"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("""
-    INSERT INTO words (word, translation, example, level, tags)
-    VALUES (?, ?, ?, ?, ?)
-    ON CONFLICT(word) DO UPDATE SET 
-        translation=excluded.translation,
-        example=excluded.example,
-        level=excluded.level,
-        tags=excluded.tags;
-    """, (word, translation, example, level, tags))
-    conn.commit()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
     conn.close()
+    return tables
 
-
+# Запуск
+init_db()
+print("Таблицы в базе:", check_tables())

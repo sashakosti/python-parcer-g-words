@@ -1,4 +1,10 @@
 import fitz  # pymupdf
+import os
+
+pdf_path = "/Users/DonHuan/Programming learning/python_parcer/data/shit2parse/Tablitsa_nepravilnyh_glagolov_nemetskogo_jazyka.pdf"  # Define your pdf path here
+
+if not os.path.exists(pdf_path):
+    raise FileNotFoundError(f"Файл {pdf_path} не найден. Проверь путь.")
 
 def extract_text_from_pdf(pdf_path): # Чтение текста из ПДФ
     doc = fitz.open(pdf_path)
