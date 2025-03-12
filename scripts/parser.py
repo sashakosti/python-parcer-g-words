@@ -1,7 +1,7 @@
 import fitz  # pymupdf
 import os
 import re
-from config import CONFIG
+from scripts.config import CONFIG
 
 pdf_path = CONFIG.get("pdf")
 
@@ -10,23 +10,34 @@ if not pdf_path:
 if not os.path.exists(pdf_path):
     raise FileNotFoundError(f"Файл {pdf_path} не найден. Проверь путь.")
 
-def extract_text_from_pdf(pdf_path):
-    """Читает текст из PDF-файла."""
+def extract_text_from_pdf(pdf_path): #Читает текст из PDF-файла.
     doc = fitz.open(pdf_path)
     text = "\n".join([page.get_text("text") for page in doc])
     return text
 
-def clean_text(lines):
-    """Очищает текст: убирает мусорные строки и объединяет разорванные фразы."""
-    IGNORE_PATTERNS = ["Таблица неправильных", "немецкого языка с переводом", "Copyright", "СЛОВАРНЫЙ ЗАПАС", "ГРАММАТИКА", "Infinitiv", "Präteritum", "Partizip II", "Перевод", "Уровень"]
 
+IGNORE_PATTERNS = [
+    "Таблица неправильных", "немецкого языка с переводом", "Copyright",
+    "СЛОВАРНЫЙ ЗАПАС", "ГРАММАТИКА", "Infinitiv", "Präteritum",
+    "Partizip II", "Перевод", "Уровень"
+]
+
+def is_verb_form(word):
+    """Проверяет, является ли слово отглагольной формой (Partizip II)."""
+    return re.match(r"^(ge|be|ver|zer|emp|ent|er|miss|über|unter|wider|hinter)?[a-zäöüß]+t$", word)
+
+def clean_text(lines):
     cleaned_lines = [line for line in lines if line.strip() and not any(ignore in line for ignore in IGNORE_PATTERNS)]
 
     merged_lines = []
-    temp_line = "" # Строка, которую нужно объединить с предыдущей
+    temp_line = ""  # Строка, которую нужно объединить с предыдущей
 
     for line in cleaned_lines:
-        if temp_line and (len(line.split()) == 1 or re.match(r"^[a-zA-Zäöüß]+$", line)):  
+        words = line.split()
+        
+        if temp_line and (
+            len(words) == 1 or re.match(r"^[a-zA-Zäöüß]+$", line)
+        ) and not is_verb_form(words[0]):  # Не объединяем, если слово — отглагольная форма
             temp_line += " " + line
         else:
             if temp_line:
@@ -36,7 +47,8 @@ def clean_text(lines):
     if temp_line:
         merged_lines.append(temp_line)
 
-    return [line.replace(", ", ",").replace(" ,", ",").strip() for line in merged_lines] # Убираем пробелы перед запятыми и после
+    return [line.replace(", ", ",").replace(" ,", ",").strip() for line in merged_lines]
+
 
 def parse_words_from_text(text, fields=None):
     """Парсит текст в список кортежей с указанными полями."""
@@ -59,13 +71,13 @@ def parse_words_from_text(text, fields=None):
     selected_indexes = [field_indexes[field] for field in fields]
 
     for line in lines:
-        parts = re.split(r"\s*[-–—]\s*", line)
-        if len(parts) < len(field_indexes):
-            print(f"Ошибка: в строке {line} не хватает данных! Разбилось на {len(parts)} частей.")
-            continue
-
-        selected_parts = [parts[i] for i in selected_indexes]
-        words.append(tuple(selected_parts))
+        parts = re.split(r"\s+", line, maxsplit=5)
+        print(parts)    
+        #if len(parts) < len(field_indexes):
+            #print(f"Ошибка: в строке {line} не хватает данных! Разбилось на {len(parts)} частей.")
+            #continue
+        #selected_parts = [parts[i] for i in selected_indexes]
+        #words.append(tuple(selected_parts))
 
     return words
 

@@ -1,5 +1,5 @@
 import sqlite3
-from config import CONFIG
+from scripts.config import CONFIG
 
 DB_PATH = CONFIG.get("database", "data/words.db")
 
