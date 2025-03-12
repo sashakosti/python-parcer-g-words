@@ -1,4 +1,4 @@
-from scripts.parser import extract_text_from_pdf, parse_words_from_text, clean_text, is_verb_form
+from scripts.parser import extract_text_from_pdf, parse_words_from_text
 from scripts.database import init_db
 from scripts.export import export_to_anki
 from scripts.check_words import add_word
